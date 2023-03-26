@@ -2,7 +2,7 @@
 
 use diesel::prelude::*;
 use serde::{Serialize, Deserialize};    
-use crate::schema::{books, book_relationships, users};
+use crate::schema::*;
 
 /*
 * Diesel models for the database tables.
@@ -33,6 +33,7 @@ pub struct BookRelationship {
     pub text_fragments: Option<String>,
 }
 
+
 // Struct for "user" class
 #[derive(Queryable, Serialize, Deserialize, Insertable, AsChangeset)]
 #[diesel(table_name = users)]
@@ -49,4 +50,44 @@ pub struct User {
 pub struct LoginData {
     pub username: String,
     pub password: String,
+}
+
+
+#[derive(Queryable, Serialize, Deserialize, Insertable, AsChangeset)]
+#[diesel(table_name = categories)]
+pub struct Category {
+    pub id: String,
+    pub name: String,
+    pub parent_category: Option<String>,
+}
+
+#[derive(Queryable, Serialize, Deserialize, Insertable, AsChangeset)]
+#[diesel(table_name = book_relationship_types)]
+pub struct BookRelationshipType {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub icon: String,
+}
+
+#[derive(Queryable, Serialize, Deserialize, Insertable, AsChangeset)]
+#[diesel(table_name = book_notes)]
+pub struct BookNote {
+    pub id: String,
+    pub book_id: String,
+    pub user_id: String,
+    pub content: String,
+    pub creation_date: String,
+    pub header: Option<String>,
+    pub relationships: Option<String>,
+}
+
+#[derive(Queryable, Serialize, Deserialize, Insertable, AsChangeset)]
+#[diesel(table_name = text_fragments)]
+pub struct TextFragment {
+    pub id: String,
+    pub book_id: String,
+    pub user_id: String,
+    pub text: String,
+    pub creation_date: String,
 }

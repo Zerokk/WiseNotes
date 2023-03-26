@@ -62,7 +62,6 @@ pub async fn list_books_handler(pool: web::Data<DbPool>) -> HttpResponse {
 }
 
 pub async fn read_book_by_id_handler(book_id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
-    println!("read book");
     let result = books_dao::read_book_by_id(book_id, pool).await;
     match result {
         Ok(book) => {

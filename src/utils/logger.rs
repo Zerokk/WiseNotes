@@ -20,8 +20,8 @@ pub fn log(logtype: LogType, message: String) {
 // Private functions
 
 fn craft_message(logtype: LogType, message: String) -> String{
-    let date = chrono::offset::Local::now().format("%Y-%m-%d, %hh:%mm");
-    let type_str: &str = match(logtype){
+    let date = chrono::offset::Local::now().format("%Y-%m-%d, %H:%M:%S");
+    let type_str: &str = match logtype {
         LogType::Info => "Info",
         LogType::Caution => "Caution",
         LogType::Error => "ERROR",
@@ -38,7 +38,7 @@ fn write_to_console(message: &String) {
 }
 
 fn write_to_logfile(message: &String) {
-    let path: String = std::env::var("LOG_FILE").expect("LOG_FILE must be set");;
+    let path: String = std::env::var("LOG_FILE").expect("LOG_FILE must be set");
     let mut file = OpenOptions::new()
         .write(true)
         .append(true)

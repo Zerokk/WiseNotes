@@ -1,5 +1,5 @@
-use crate::models::BookNote;
-use crate::schema::book_notes;
+use crate::models::TextFragment;
+use crate::schema::text_fragments;
 use actix_web::web;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
@@ -8,73 +8,73 @@ use diesel::result::Error;
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 /*
-* DAO file for Book Notes class.
+* DAO file for relationship types between books.
 * This file contains the functions that are used to interact with the database.
 */
 
-pub async fn list_book_notes(pool: web::Data<DbPool>) -> Result<Vec<BookNote>, Error> {
+pub async fn list_text_fragments(pool: web::Data<DbPool>) -> Result<Vec<TextFragment>, Error> {
     let mut conn = pool
         .get()
         .expect("Failed to get database connection from pool");
 
-    book_notes::table
-        .load::<BookNote>(&mut conn)
+        text_fragments::table
+        .load::<TextFragment>(&mut conn)
         .map_err(|e| e.into())
 }
 
-pub async fn read_book_note_by_id(
-    book_note_id: web::Path<String>,
+pub async fn read_text_fragment_by_id(
+    text_fragment_id: web::Path<String>,
     pool: web::Data<DbPool>,
-) -> Result<BookNote, Error> {
-    use crate::schema::book_notes::dsl::*;
+) -> Result<TextFragment, Error> {
+    use crate::schema::text_fragments::dsl::*;
     let mut conn = pool
         .get()
         .expect("Failed to get database connection from pool");
 
-    book_notes
-        .filter(id.eq(book_note_id.into_inner()))
-        .first::<BookNote>(&mut conn)
+    text_fragments
+        .filter(id.eq(text_fragment_id.into_inner()))
+        .first::<TextFragment>(&mut conn)
         .map_err(|e| e.into())
 }
 
-pub async fn create_book_note(
-    book_note: web::Json<BookNote>,
+pub async fn create_text_fragment(
+    text_fragment: web::Json<TextFragment>,
     pool: web::Data<DbPool>,
 ) -> Result<usize, Error> {
     let mut conn = pool
         .get()
         .expect("Failed to get database connection from pool");
 
-    diesel::insert_into(book_notes::table)
-        .values(book_note.into_inner())
+    diesel::insert_into(text_fragments::table)
+        .values(text_fragment.into_inner())
         .execute(&mut conn)
-        .map_err(|e| e.into())
 }
 
-pub async fn update_book_note(
-    book_note_id: web::Path<String>,
-    new_data: web::Json<BookNote>,
+pub async fn update_text_fragment(
+    text_fragment_id: web::Path<String>,
+    new_data: web::Json<TextFragment>,
     pool: web::Data<DbPool>,
 ) -> Result<usize, Error> {
+    
     let mut conn = pool
         .get()
         .expect("Failed to get database connection from pool");
 
-    diesel::update(book_notes::table.find(book_note_id.into_inner()))
+    diesel::update(text_fragments::table.find(text_fragment_id.into_inner()))
         .set(new_data.into_inner())
         .execute(&mut conn)
         .map_err(|e| e.into())
 }
 
-pub async fn delete_book_note(
-    book_note_id: web::Path<String>,
+pub async fn delete_text_fragment(
+    text_fragment_id: web::Path<String>,
     pool: web::Data<DbPool>,
 ) -> Result<usize, Error> {
     let mut conn = pool
         .get()
         .expect("Failed to get database connection from pool");
 
-    diesel::delete(book_notes::table.find(book_note_id.into_inner()))
+    diesel::delete(text_fragments::table.find(text_fragment_id.into_inner()))
         .execute(&mut conn)
         .map_err(|e| e.into())
 }

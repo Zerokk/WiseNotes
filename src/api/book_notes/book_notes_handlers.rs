@@ -1,5 +1,4 @@
-use crate::logger::*;
-use crate::models::book_note;
+use crate::{utils::{LogType, log}, models::BookNote};
 use actix_web::{http::header::ContentType, web, HttpResponse};
 use diesel::{r2d2::ConnectionManager, SqliteConnection, };
 mod book_notes_dao;
@@ -14,7 +13,7 @@ pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
  */
 
 
-pub async fn create_book_note_handler(book_note_data: web::Json<book_note>, pool: web::Data<DbPool>) -> HttpResponse {
+pub async fn create_book_note_handler(book_note_data: web::Json<BookNote>, pool: web::Data<DbPool>) -> HttpResponse {
 
     let result = book_notes_dao::create_book_note(book_note_data, pool).await;
     match result {
@@ -27,7 +26,7 @@ pub async fn create_book_note_handler(book_note_data: web::Json<book_note>, pool
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to insert book_note into database'")
+                .body("{err: 'Unable to insert book note into database'")
         }
     }
 }
@@ -44,12 +43,12 @@ pub async fn list_book_notes_handler(pool: web::Data<DbPool>) -> HttpResponse {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to list book_notes from database'")
+                .body("{err: 'Unable to list all book notes from database'")
         }
     }
 }
 
-pub async fn read_book_note_by_id_handler(book_note_id: web::Path<i32>, pool: web::Data<DbPool>) -> HttpResponse {
+pub async fn read_book_note_by_id_handler(book_note_id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
     let result = book_notes_dao::read_book_note_by_id(book_note_id, pool).await;
     match result {
         Ok(book_note) => {
@@ -61,12 +60,12 @@ pub async fn read_book_note_by_id_handler(book_note_id: web::Path<i32>, pool: we
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to read book_note from database'")
+                .body("{err: 'Unable to read book note from database'")
         }
     }
 }
 
-pub async fn update_book_note_handler(id: web::Path<i32>, book_note_data: web::Json<book_note>, pool: web::Data<DbPool>) -> HttpResponse {
+pub async fn update_book_note_handler(id: web::Path<String>, book_note_data: web::Json<BookNote>, pool: web::Data<DbPool>) -> HttpResponse {
     let result = book_notes_dao::update_book_note(id, book_note_data, pool).await;
     match result {
         Ok(book_note) => {
@@ -78,12 +77,12 @@ pub async fn update_book_note_handler(id: web::Path<i32>, book_note_data: web::J
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to update book_note in database'")
+                .body("{err: 'Unable to update book note in database'")
         }
     }
 }
 
-pub async fn delete_book_note_handler(id: web::Path<i32>, pool: web::Data<DbPool>) -> HttpResponse {
+pub async fn delete_book_note_handler(id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
     let result = book_notes_dao::delete_book_note(id, pool).await;
     match result {
         Ok(book_note) => {
@@ -95,7 +94,7 @@ pub async fn delete_book_note_handler(id: web::Path<i32>, pool: web::Data<DbPool
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to delete book_note from database'")
+                .body("{err: 'Unable to delete book note from database'")
         }
     }
 }

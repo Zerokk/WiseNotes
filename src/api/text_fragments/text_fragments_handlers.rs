@@ -1,7 +1,7 @@
-use crate::{utils::{LogType, log}, models::{BookRelationship}};
+use crate::{utils::{LogType, log}, models::{TextFragment}};
 use actix_web::{http::header::ContentType, web, HttpResponse};
 use diesel::{r2d2::{ConnectionManager}, SqliteConnection, };
-mod books_relationships_dao;
+mod text_fragments_dao;
 
 pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -13,88 +13,88 @@ pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
  */
 
 
-pub async fn create_book_relationship_handler(book_data: web::Json<BookRelationship>, pool: web::Data<DbPool>) -> HttpResponse {
+pub async fn create_text_fragment_handler(text_fragment_data: web::Json<TextFragment>, pool: web::Data<DbPool>) -> HttpResponse {
 
-    let result = books_relationships_dao::create_book_relationship(book_data, pool).await;
+    let result = text_fragments_dao::create_text_fragment(text_fragment_data, pool).await;
     match result {
-        Ok(book) => {
+        Ok(text_fragment) => {
             HttpResponse::Ok()
             .content_type(ContentType::json())
-            .json(&book)
+            .json(&text_fragment)
         },
         Err(err) => {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to insert book relationship into database'")
+                .body("{err: 'Unable to insert text fragment into database'")
         }
     }
 }
 
-pub async fn list_books_handler(pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::list_book_relationships(pool).await;
+pub async fn list_text_fragments_handler(pool: web::Data<DbPool>) -> HttpResponse {
+    let result = text_fragments_dao::list_text_fragments(pool).await;
     match result {
-        Ok(books) => {
+        Ok(text_fragments) => {
             HttpResponse::Ok()
             .content_type(ContentType::json())
-            .json(&books)
+            .json(&text_fragments)
         },
         Err(err) => {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to list book relationships from database'")
+                .body("{err: 'Unable to list text fragments from database'")
         }
     }
 }
 
-pub async fn read_book_by_id_handler(book_id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::read_book_relationship_by_id(book_id, pool).await;
+pub async fn read_text_fragment_by_id_handler(text_fragment_id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
+    let result = text_fragments_dao::read_text_fragment_by_id(text_fragment_id, pool).await;
     match result {
-        Ok(book) => {
+        Ok(text_fragment) => {
             HttpResponse::Ok()
             .content_type(ContentType::json())
-            .json(&book)
+            .json(&text_fragment)
         },
         Err(err) => {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to read book relationship from database'")
+                .body("{err: 'Unable to read text fragment from database'")
         }
     }
 }
 
-pub async fn update_book_handler(id: web::Path<String>, book_data: web::Json<BookRelationship>, pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::update_book_relationship(id, book_data, pool).await;
+pub async fn update_text_fragment_handler(id: web::Path<String>, text_fragment_data: web::Json<TextFragment>, pool: web::Data<DbPool>) -> HttpResponse {
+    let result = text_fragments_dao::update_text_fragment(id, text_fragment_data, pool).await;
     match result {
-        Ok(book) => {
+        Ok(text_fragment) => {
             HttpResponse::Ok()
             .content_type(ContentType::json())
-            .json(&book)
+            .json(&text_fragment)
         },
         Err(err) => {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to update book relationship in database'")
+                .body("{err: 'Unable to update text fragment in database'")
         }
     }
 }
 
-pub async fn delete_book_handler(id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::delete_book_relationship(id, pool).await;
+pub async fn delete_text_fragment_handler(id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
+    let result = text_fragments_dao::delete_text_fragment(id, pool).await;
     match result {
-        Ok(book) => {
+        Ok(text_fragment) => {
             HttpResponse::Ok()
             .content_type(ContentType::json())
-            .json(&book)
+            .json(&text_fragment)
         },
         Err(err) => {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to delete book relationship from database'")
+                .body("{err: 'Unable to delete book from database'")
         }
     }
 }

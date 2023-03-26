@@ -1,9 +1,22 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    book_notes (id) {
+        id -> Text,
+        book_id -> Text,
+        user_id -> Text,
+        content -> Text,
+        creation_date -> Text,
+        header -> Nullable<Text>,
+        relationships -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
     book_relationship_types (id) {
-        id -> Integer,
+        id -> Text,
         name -> Text,
+        description -> Text,
         icon -> Text,
     }
 }
@@ -34,6 +47,24 @@ diesel::table! {
 }
 
 diesel::table! {
+    categories (id) {
+        id -> Text,
+        name -> Text,
+        parent_category -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
+    text_fragments (id) {
+        id -> Text,
+        book_id -> Text,
+        user_id -> Text,
+        text -> Text,
+        creation_date -> Text,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Text,
         username -> Text,
@@ -45,8 +76,11 @@ diesel::table! {
 }
 
 diesel::allow_tables_to_appear_in_same_query!(
+    book_notes,
     book_relationship_types,
     book_relationships,
     books,
+    categories,
+    text_fragments,
     users,
 );

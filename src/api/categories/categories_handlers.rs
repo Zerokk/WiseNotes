@@ -1,7 +1,7 @@
-use crate::{utils::{LogType, log}, models::{BookRelationship}};
+use crate::{utils::{LogType, log}, models::{Category}};
 use actix_web::{http::header::ContentType, web, HttpResponse};
 use diesel::{r2d2::{ConnectionManager}, SqliteConnection, };
-mod books_relationships_dao;
+mod categories_dao;
 
 pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -13,9 +13,9 @@ pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
  */
 
 
-pub async fn create_book_relationship_handler(book_data: web::Json<BookRelationship>, pool: web::Data<DbPool>) -> HttpResponse {
+pub async fn create_category_handler(category_data: web::Json<Category>, pool: web::Data<DbPool>) -> HttpResponse {
 
-    let result = books_relationships_dao::create_book_relationship(book_data, pool).await;
+    let result = categories_dao::create_category(category_data, pool).await;
     match result {
         Ok(book) => {
             HttpResponse::Ok()
@@ -26,13 +26,13 @@ pub async fn create_book_relationship_handler(book_data: web::Json<BookRelations
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to insert book relationship into database'")
+                .body("{err: 'Unable to insert category into database'")
         }
     }
 }
 
-pub async fn list_books_handler(pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::list_book_relationships(pool).await;
+pub async fn list_categories_handler(pool: web::Data<DbPool>) -> HttpResponse {
+    let result = categories_dao::list_categories(pool).await;
     match result {
         Ok(books) => {
             HttpResponse::Ok()
@@ -43,13 +43,13 @@ pub async fn list_books_handler(pool: web::Data<DbPool>) -> HttpResponse {
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to list book relationships from database'")
+                .body("{err: 'Unable to list categories from database'")
         }
     }
 }
 
-pub async fn read_book_by_id_handler(book_id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::read_book_relationship_by_id(book_id, pool).await;
+pub async fn read_category_by_id_handler(category_id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
+    let result = categories_dao::read_category_by_id(category_id, pool).await;
     match result {
         Ok(book) => {
             HttpResponse::Ok()
@@ -60,13 +60,13 @@ pub async fn read_book_by_id_handler(book_id: web::Path<String>, pool: web::Data
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to read book relationship from database'")
+                .body("{err: 'Unable to read category from database'")
         }
     }
 }
 
-pub async fn update_book_handler(id: web::Path<String>, book_data: web::Json<BookRelationship>, pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::update_book_relationship(id, book_data, pool).await;
+pub async fn update_category_handler(id: web::Path<String>, category_data: web::Json<Category>, pool: web::Data<DbPool>) -> HttpResponse {
+    let result = categories_dao::update_category(id, category_data, pool).await;
     match result {
         Ok(book) => {
             HttpResponse::Ok()
@@ -77,13 +77,13 @@ pub async fn update_book_handler(id: web::Path<String>, book_data: web::Json<Boo
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to update book relationship in database'")
+                .body("{err: 'Unable to update category in database'")
         }
     }
 }
 
-pub async fn delete_book_handler(id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
-    let result = books_relationships_dao::delete_book_relationship(id, pool).await;
+pub async fn delete_category_handler(id: web::Path<String>, pool: web::Data<DbPool>) -> HttpResponse {
+    let result = categories_dao::delete_category(id, pool).await;
     match result {
         Ok(book) => {
             HttpResponse::Ok()
@@ -94,7 +94,7 @@ pub async fn delete_book_handler(id: web::Path<String>, pool: web::Data<DbPool>)
             log(LogType::Error, err.to_string());
             HttpResponse::InternalServerError()
                 .content_type(ContentType::json())
-                .body("{err: 'Unable to delete book relationship from database'")
+                .body("{err: 'Unable to delete category from database'")
         }
     }
 }
