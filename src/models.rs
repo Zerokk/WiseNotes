@@ -19,7 +19,10 @@ pub struct Book {
     pub publishing_house: Option<String>,
     pub release_date: Option<String>,
     pub cover_image: Option<String>
+
+
 }
+
 
 #[derive(Queryable, Serialize, Deserialize, Insertable, AsChangeset)]
 #[diesel(table_name = book_relationships)]
