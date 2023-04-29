@@ -5,7 +5,7 @@ use crate::{
 use actix_web::{cookie::Cookie, http::header::ContentType, web, HttpRequest, HttpResponse};
 use diesel::{r2d2::ConnectionManager, SqliteConnection};
 use uuid::Uuid;
-mod users_dao;
+pub mod users_dao;
 pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 /**

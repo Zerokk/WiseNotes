@@ -4,7 +4,7 @@ use chrono;
 
 pub enum LogType {
     Info,
-    Caution,
+    Security,
     Error,
     CriticalError
 }

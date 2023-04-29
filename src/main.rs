@@ -7,6 +7,7 @@ use dotenvy::dotenv;
 // Modules import
 mod utils;
 mod tests;
+mod guards;
 use utils::*;
 mod api_modules;
 mod models;
